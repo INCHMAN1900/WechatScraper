@@ -9,19 +9,14 @@ import json
 import pymysql
 
 import config
-
-# conn = pymysql.connect(**self._db)
-# cursor = conn.cursor()
-# cursor.execute(query)
-# conn.commit()
-# cursor.close()
-# conn.close()
+import utils
 
 class DB(object):
 	"""docstring for DB"""
-	def __init__(self, **kwargs):
+	def __init__(self, db_config, **kwargs):
 		super(DB, self).__init__()
-		self._db = kwargs.get('db_config', config.db_config)
+		self._db = utils.merge(db_config, (config.db_config))
+		print(self._db)
 
 	def store_gzh_list(self, gzhList, **kwargs):
 		if(type(gzhList) != list):

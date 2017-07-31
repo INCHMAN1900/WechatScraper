@@ -7,13 +7,14 @@ import re
 import json
 
 import config
+import utils
 
 browser = webdriver.Firefox()
 
 class WechatScraper():
 
-	def __init__(self, **kwargs):
-		config = kwargs.get('config')
+	def __init__(self, ws_config, **kwargs):
+		config = utils.merge(ws_config, config)
 
 	"""
 		query: keyword
@@ -105,7 +106,6 @@ class WechatScraper():
 		return gzh_list
 
 	# get gzh message by wechatid
-
 	def get_gzh_message(self, wechatid):
 		query = 'query=' + str(wechatid)
 		page = 'page=' + str(1)

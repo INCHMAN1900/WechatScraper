@@ -11,10 +11,8 @@ db_config = {
 	'host': '127.0.0.1',    # host
 	'port': 3306,           # port
 	'user': 'root',         # database username
-	'password': '203102',        # database password
+	'password': '123456',   # database password
 	'db': 'HUANLEYE',       # database name
-	'charset': 'utf8mb4',
+	'charset': 'utf8mb4',   # database charset
 	'cursorclass': pymysql.cursors.DictCursor
 }
-
-img_path = './imgs/'
