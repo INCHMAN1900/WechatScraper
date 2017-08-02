@@ -9,7 +9,7 @@ import json
 import config
 import utils
 
-browser = webdriver.Firefox()
+browser = webdriver.PhantomJS()
 
 class WechatScraper():
 
@@ -63,7 +63,7 @@ class WechatScraper():
 		if(raw_avatar):
 			avatar = re.sub(re.compile(r'[^"]+"'), '', raw_avatar[0], 1).replace('";', '')
 		page_content = browser.find_element_by_id('img-content')
-		ems = page_content.find_elements_by_css_selector('.rich_media_meta_list>em')
+       		ems = page_content.find_elements_by_css_selector('.rich_media_meta_list>em')
 		author = ''
 		if(len(ems)>1):
 			author = ems[1].text
@@ -154,7 +154,7 @@ class WechatScraper():
 
 
 	"""
-		below here are some common functions
+		below here are some private functions
 
 	"""
 
