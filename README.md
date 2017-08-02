@@ -1,4 +1,5 @@
 # WechatScraper
+A python wechat official account scrawler, using sougou search engine. 
 
-# A python wechat official account scrawler, using sougou search engine. 
-# selenium needed
+### Needed
+Python + Selenium + PhantomJS
