@@ -6,4 +6,5 @@ Python + Selenium + PhantomJS + MySQL
 
 ### MySQL
 sql folder is for mysql.
+
 connect mysql and type ``` source ```, then drag the file into the command lines, the table will automatically be created.
