@@ -2,7 +2,6 @@
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
-from pyvirtualdisplay import Display
 import time
 import re
 import json
@@ -10,9 +9,12 @@ import json
 import config
 import utils
 
-display = Display(visible=0, size=(1366, 768))
-display.start()
-print('Display start')
+# if you want to make this word on a system with no GUI, install Xvfb first and then uncomment these lines.
+
+# from pyvirtualdisplay import Display
+# display = Display(visible=0, size=(1366, 768))
+# display.start()
+# print('Display start')
 
 browser = webdriver.Firefox()
 
