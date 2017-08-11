@@ -47,16 +47,7 @@ def digest_article(msg, **kwargs):
 	article = ws.get_article_by_url(url)
 	article = utils.merge(article, msg)
 	article['col'] = col
-
-	content = article['content']
-	# replace images
-	img_re = re.compile(r'<img[^>]+data\-src\=\"http[^"]+\"')
-	images = img_re.findall(content)
-	for j in range(len(images)):
-		images[j] = re.sub('<img.+data\-src=', '', images[j]).replace('"', '')
-		newPath = ih.write_image(images[j])
-		content = content.replace(images[j], newPath, 2)
-	article['content'] = content
+	article['content'] = ih.withdraw_content_imgs(article['content'])
 	if(article['poster'] and len(article['poster']) > 0):
 		article['poster'] = ih.write_image(article['poster'][0])
 	print('article get')

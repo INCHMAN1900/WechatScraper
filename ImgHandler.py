@@ -14,6 +14,15 @@ class ImageHandler(object):
 		super(ImageHandler, self).__init__()
 		self.path = kwargs.get('path', config.img_base_path)
 
+	def withdraw_content_imgs(self, content):
+		img_re = re.compile(r'<img[^>]+data\-src\=\"http[^"]+\"')
+		images = img_re.findall(content)
+		for j in range(len(images)):
+			images[j] = re.sub('<img.+data\-src=', '', images[j]).replace('"', '')
+			newPath = self.write_image(images[j])
+			content = content.replace(images[j], newPath, 2)
+		return content
+
 	def write_image(self, image):
 		if(image):
 			_id = self._generate_image_id()
