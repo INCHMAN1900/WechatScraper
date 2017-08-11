@@ -12,7 +12,7 @@ db_config = {
 	'port': 3306,           # port
 	'user': 'root',         # database username
 	'password': '123456',   # database password
-	'db': 'HUANLEYE',       # database name
+	'db': 'DATABASE',       # database name
 	'charset': 'utf8mb4',   # database charset
 	'cursorclass': pymysql.cursors.DictCursor
 }
