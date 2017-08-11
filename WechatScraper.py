@@ -2,6 +2,7 @@
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
+from pyvirtualdisplay import Display
 import time
 import re
 import json
@@ -9,12 +10,16 @@ import json
 import config
 import utils
 
-browser = webdriver.PhantomJS()
+display = Display(visible=0, size=(1366, 768))
+display.start()
+print('Display start')
+
+browser = webdriver.Firefox()
 
 class WechatScraper():
 
-	def __init__(self, ws_config, **kwargs):
-		config = utils.merge(ws_config, config)
+	def __init__(self, **kwargs):
+		self.config = config
 
 	"""
 		query: keyword
@@ -24,7 +29,7 @@ class WechatScraper():
 	def get_article_list_by_keyword(self, query, page=1):
 		query = 'query=' + query
 		page = 'page=' + str(page)
-		built_url = self._build_url(config.article_search_url, ['query', 'page'], [query, page])
+		built_url = self._build_url(self.config.article_search_url, ['query', 'page'], [query, page])
 		article_list = []
 		browser.get(built_url)
 
@@ -63,7 +68,7 @@ class WechatScraper():
 		if(raw_avatar):
 			avatar = re.sub(re.compile(r'[^"]+"'), '', raw_avatar[0], 1).replace('";', '')
 		page_content = browser.find_element_by_id('img-content')
-       		ems = page_content.find_elements_by_css_selector('.rich_media_meta_list>em')
+		ems = page_content.find_elements_by_css_selector('.rich_media_meta_list>em')
 		author = ''
 		if(len(ems)>1):
 			author = ems[1].text
@@ -80,7 +85,7 @@ class WechatScraper():
 		page = kwargs.get('page', 1)
 		query = 'query=' + query
 		page = 'page=' + str(page)
-		built_url = self._build_url(config.gzh_search_url, ['query', 'page'], [query, page])
+		built_url = self._build_url(self.config.gzh_search_url, ['query', 'page'], [query, page])
 		browser.get(built_url)
 		gzh_list = browser.find_elements_by_css_selector('.news-list2 li')
 		for i in range(len(gzh_list)):
@@ -109,7 +114,7 @@ class WechatScraper():
 	def get_gzh_message(self, wechatid):
 		query = 'query=' + str(wechatid)
 		page = 'page=' + str(1)
-		built_url = self._build_url(config.gzh_search_url, ['query', 'page'], [query, page])
+		built_url = self._build_url(self.config.gzh_search_url, ['query', 'page'], [query, page])
 		browser.get(built_url)
 		gzh_list = browser.find_elements_by_css_selector('.news-list2 li')
 		gzh_url = gzh_list[0].find_element_by_css_selector('.img-box a').get_attribute('href')
@@ -154,7 +159,7 @@ class WechatScraper():
 
 
 	"""
-		below here are some private functions
+		below here are some common functions
 
 	"""
 

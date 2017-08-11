@@ -5,27 +5,40 @@ import time
 from WechatScraper import WechatScraper
 from db import DB
 import utils
+import re
 
 ws = WechatScraper()
 
-for i in range(3):
-	gzh_list = ws.search_gzh_by_keyword('manwei', page=i + 1)
-	db.store_gzh_list(gzh_list)
-	time.sleep(3)
+'''
+to custom your databse config , add db_config as a named parameter like:
+	db_config = {
+		'host': '127.0.0.1',    # host
+		'port': 3306,           # port
+		'user': 'root',         # database username
+		'password': '123456',   # database password
+		'db': 'DATABASE',       # database name
+	}
+'''
 
+db = DB()
 
-# scrap 10 page articles related to one keyword
+from ImgHandler import ImageHandler
+
+ih = ImageHandler() 
+
+# scrap 10 page articles related to one keyword.
+# images will be put oin imgs folder
 
 keyword_list = [{
-	'keyword': 'manwei',
+	'keyword': '漫威',
 	'page': 10
 }, {
-	'keyword': 'marvel',
+	'keyword': 'DC',
 	'page': 10
 }]
 
 def digest_article(msg, **kwargs):
-	col = kwargs.get('col', '过山车')
+	col = kwargs.get('col', 'mycol')
 	url = msg['url'].replace('amp;', '')
 	effect_rows = db.check_exist(msg['title'])
 	if(effect_rows>0):
@@ -34,8 +47,22 @@ def digest_article(msg, **kwargs):
 	article = ws.get_article_by_url(url)
 	article = utils.merge(article, msg)
 	article['col'] = col
+
+	content = article['content']
+	# replace images
+	img_re = re.compile(r'<img[^>]+data\-src\=\"http[^"]+\"')
+	images = img_re.findall(content)
+	for j in range(len(images)):
+		images[j] = re.sub('<img.+data\-src=', '', images[j]).replace('"', '')
+		newPath = ih.write_image(images[j])
+		content = content.replace(images[j], newPath, 2)
+	article['content'] = content
+	if(article['poster'] and len(article['poster']) > 0):
+		article['poster'] = ih.write_image(article['poster'][0])
+	print('article get')
 	db.store_article(article)
-	time.sleep(5)
+	print('article stored')
+	time.sleep(3)
 
 for item in keyword_list:
 	for i in range(item['page']):
